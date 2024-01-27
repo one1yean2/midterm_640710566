@@ -14,7 +14,6 @@ class _Calculator extends State<Calculator> {
   // state variables
 
   var currentinput = "0";
-  var newInput = "";
 
   static const addSign = "\u002B";
   static const subtractSign = "\u2212";
