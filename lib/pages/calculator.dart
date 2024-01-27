@@ -14,17 +14,74 @@ class _Calculator extends State<Calculator> {
   // state variables
 
   var currentinput = "0";
-
+  var sign = [addSign, subtractSign, multiplySign, divideSign];
   static const addSign = "\u002B";
   static const subtractSign = "\u2212";
   static const multiplySign = "\u00D7";
   static const divideSign = "\u00F7";
   static const equalSign = "\u003D";
 
+  void subCurrentInput(String input) {
+    currentinput = currentinput.substring(0, currentinput.length - 1);
+    currentinput += input;
+  }
+
+  bool endwith(List<String> x, String label) {
+    for (String i in x) {
+      if (currentinput.endsWith(i)) {
+        subCurrentInput(label);
+        return true;
+      }
+    }
+    return false;
+  }
+
+  Widget buildRow({
+    required int row,
+  }) {
+    if (row == 0) {
+      return Expanded(
+        child: Row(
+          children: [buildItem(number: -1, label: 'C'), buildItem(number: -1, label: 'BACKSPACE')],
+        ),
+      );
+    } else if (row == 1) {
+      return Expanded(
+        child: Row(
+          children: [buildItem(number: 7), buildItem(number: 8), buildItem(number: 9), buildItem(number: -1, label: divideSign)],
+        ),
+      );
+    } else if (row == 2) {
+      return Expanded(
+        child: Row(
+          children: [buildItem(number: 4), buildItem(number: 5), buildItem(number: 6), buildItem(number: -1, label: multiplySign)],
+        ),
+      );
+    } else if (row == 3) {
+      return Expanded(
+        child: Row(
+          children: [buildItem(number: 1), buildItem(number: 2), buildItem(number: 3), buildItem(number: -1, label: subtractSign)],
+        ),
+      );
+    } else if (row == 4) {
+      return Expanded(
+        child: Row(
+          children: [buildItem(number: 0), buildItem(number: -1, label: addSign)],
+        ),
+      );
+    } else if (row == 5) {
+      return Expanded(
+        child: Row(
+          children: [buildItem(number: -1, label: equalSign)],
+        ),
+      );
+    }
+    return Container();
+  }
+
   Widget buildItem({
     required int number,
     String label = "",
-    // required String label,
     Color color = Colors.black,
   }) {
     if (number > 0) {
@@ -98,73 +155,26 @@ class _Calculator extends State<Calculator> {
                   if (label == 'C') {
                     currentinput = '0';
                   } else if (label == divideSign && !currentinput.startsWith('0')) {
-                    if (currentinput.endsWith(multiplySign)) {
-                      currentinput = currentinput.substring(0, currentinput.length - 1);
-                      currentinput += divideSign;
-                    } else if (currentinput.endsWith(addSign)) {
-                      currentinput = currentinput.substring(0, currentinput.length - 1);
-                      currentinput += divideSign;
-                    } else if (currentinput.endsWith(subtractSign)) {
-                      currentinput = currentinput.substring(0, currentinput.length - 1);
-                      currentinput += divideSign;
-                    } else if (!currentinput.endsWith(divideSign)) {
-                      currentinput += divideSign;
+                    if (!endwith(sign, label)) {
+                      currentinput += label;
                     }
                   } else if (label == addSign && !currentinput.startsWith('0')) {
-                    if (currentinput.endsWith(divideSign)) {
-                      currentinput = currentinput.substring(0, currentinput.length - 1);
-                      currentinput += addSign;
-                    } else if (currentinput.endsWith(multiplySign)) {
-                      currentinput = currentinput.substring(0, currentinput.length - multiplySign.length);
-                      currentinput += addSign;
-                    } else if (currentinput.endsWith(divideSign)) {
-                      currentinput = currentinput.substring(0, currentinput.length - 1);
-                      currentinput += addSign;
-                    } else if (currentinput.endsWith(subtractSign)) {
-                      currentinput = currentinput.substring(0, currentinput.length - 1);
-                      currentinput += addSign;
-                    } else if (!currentinput.endsWith(addSign)) {
-                      currentinput += addSign;
+                    if (!endwith(sign, label)) {
+                      currentinput += label;
                     }
                   } else if (label == subtractSign && !currentinput.startsWith('0')) {
-                    if (currentinput.endsWith(divideSign)) {
-                      currentinput = currentinput.substring(0, currentinput.length - 1);
-                      currentinput += subtractSign;
-                    } else if (currentinput.endsWith(multiplySign)) {
-                      currentinput = currentinput.substring(0, currentinput.length - 1);
-                      currentinput += subtractSign;
-                    } else if (currentinput.endsWith(divideSign)) {
-                      currentinput = currentinput.substring(0, currentinput.length - 1);
-                      currentinput += subtractSign;
-                    } else if (currentinput.endsWith(addSign)) {
-                      currentinput = currentinput.substring(0, currentinput.length - 1);
-                      currentinput += subtractSign;
-                    } else if (!currentinput.endsWith(subtractSign)) {
-                      currentinput += subtractSign;
+                    if (!endwith(sign, label)) {
+                      currentinput += label;
                     }
                   } else if (label == multiplySign && !currentinput.startsWith('0')) {
-                    if (currentinput.endsWith(divideSign)) {
-                      currentinput = currentinput.substring(0, currentinput.length - 1);
-                      currentinput += multiplySign;
-                    } else if (currentinput.endsWith(subtractSign)) {
-                      currentinput = currentinput.substring(0, currentinput.length - 1);
-                      currentinput += multiplySign;
-                    } else if (currentinput.endsWith(divideSign)) {
-                      currentinput = currentinput.substring(0, currentinput.length - 1);
-                      currentinput += multiplySign;
-                    } else if (currentinput.endsWith(addSign)) {
-                      currentinput = currentinput.substring(0, currentinput.length - 1);
-                      currentinput += multiplySign;
-                    } else if (!currentinput.endsWith(multiplySign)) {
-                      currentinput += multiplySign;
+                    if (!endwith(sign, label)) {
+                      currentinput += label;
                     }
                   }
                 });
               },
               child: Container(
                 alignment: Alignment.center,
-                // margin: EdgeInsets.all(2),
-
                 child: Text(
                   label.toString(),
                   style: GoogleFonts.notoSansThai(
@@ -191,8 +201,6 @@ class _Calculator extends State<Calculator> {
               },
               child: Container(
                 alignment: Alignment.center,
-                // decoration: BoxDecoration(color: Colors.blue),
-                // width: 70,
                 child: Text(
                   label.toString(),
                   style: GoogleFonts.notoSansThai(
@@ -223,10 +231,9 @@ class _Calculator extends State<Calculator> {
                 });
               },
               child: Container(
-                  alignment: Alignment.center,
-
-                  // width: 70,
-                  child: Icon(Icons.backspace_outlined)),
+                alignment: Alignment.center,
+                child: Icon(Icons.backspace_outlined),
+              ),
             ),
           ),
         ),
@@ -236,32 +243,6 @@ class _Calculator extends State<Calculator> {
 
   @override
   Widget build(BuildContext context) {
-    var numbers = ['one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'zero'];
-    List<Widget> itemList0 = [];
-    List<Widget> itemList1 = [];
-    List<Widget> itemList2 = [];
-    List<Widget> itemList3 = [];
-    List<Widget> itemList4 = [];
-    List<Widget> itemList5 = [];
-    //  List<Widget> itemList = [];
-
-    itemList0.add(buildItem(number: -1, label: 'C'));
-    itemList0.add(buildItem(number: -1, label: 'BACKSPACE'));
-
-    for (int i = 0; i < 3; i++) {
-      itemList1.add(buildItem(number: i + 1));
-      // itemList.add(SizedBox(width: 15));
-      itemList2.add(buildItem(number: i + 4));
-      // itemList2.add(SizedBox(width: 15));
-      itemList3.add(buildItem(number: i + 7));
-      // itemList3.add(SizedBox(width: 15));
-    }
-    itemList4.add(buildItem(number: 0));
-    itemList1.add(buildItem(number: -1, label: subtractSign));
-    itemList2.add(buildItem(number: -1, label: multiplySign));
-    itemList3.add(buildItem(number: -1, label: divideSign));
-    itemList4.add(buildItem(number: -1, label: addSign));
-    itemList5.add(buildItem(number: -1, label: equalSign));
     return Scaffold(
       appBar: _buildAppBar(),
       body: Container(
@@ -275,42 +256,12 @@ class _Calculator extends State<Calculator> {
                 style: TextStyle(fontSize: 40),
               ),
             ),
-            Expanded(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: itemList0,
-              ),
-            ),
-            Expanded(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: itemList3,
-              ),
-            ),
-            Expanded(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: itemList2,
-              ),
-            ),
-            Expanded(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: itemList1,
-              ),
-            ),
-            Expanded(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: itemList4,
-              ),
-            ),
-            Expanded(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: itemList5,
-              ),
-            ),
+            buildRow(row: 0),
+            buildRow(row: 1),
+            buildRow(row: 2),
+            buildRow(row: 3),
+            buildRow(row: 4),
+            buildRow(row: 5),
           ],
         ),
       ),
@@ -320,9 +271,6 @@ class _Calculator extends State<Calculator> {
 
 AppBar _buildAppBar() {
   return AppBar(
-      // centerTitle: true,
-      titleSpacing: 0.0,
-      // backgroundColor: Colors.transparent,
       shadowColor: Colors.grey,
       title: Row(
         mainAxisAlignment: MainAxisAlignment.center,
